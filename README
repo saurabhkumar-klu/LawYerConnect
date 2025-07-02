@@ -1,0 +1,82 @@
+# LawyerConnect
+
+A modern platform connecting clients and lawyers for legal services, built with React, Vite, Tailwind CSS, and Supabase.
+
+🌐 **Live Demo:** [https://law-yer-connect.vercel.app/](https://law-yer-connect.vercel.app/)
+
+---
+
+## Features
+
+- 🔒 User authentication (email/password & Google, powered by Supabase)
+- 👩‍⚖️ Lawyer and client account types
+- 💬 Real-time chat (Supabase)
+- 📊 Analytics dashboard
+- 📱 Responsive design (Tailwind CSS)
+- ⚡ Fast, serverless deployment (Vercel)
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/LawYerConnect.git
+cd LawYerConnect
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+
+Create a `.env` file in the root directory and add:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 4. Run locally
+
+```bash
+npm run dev
+```
+
+---
+
+## Deployment
+
+This project is deployed on [Vercel](https://vercel.com/).  
+To deploy your own version:
+
+1. Push your code to GitHub.
+2. Import your repo on [vercel.com](https://vercel.com/).
+3. Add your environment variables in the Vercel dashboard.
+4. Deploy!
+
+---
+
+## Tech Stack
+
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Supabase](https://supabase.com/)
+- [Vercel](https://vercel.com/)
+
+---
+
+## License
+
+MIT
+
+---
+
+## Author
+
+[Saurabh Kumar](https://law-yer-connect.vercel.app/)
