@@ -27,7 +27,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const AppContent: React.FC = () => {
   const { user, isLoading } = useAuth();
   const { requestPermission } = useNotifications();
-  const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
   const [filteredLawyers, setFilteredLawyers] = useState<Lawyer[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
@@ -117,68 +116,65 @@ const AppContent: React.FC = () => {
   };
 
   const handleSearch = (filters: SearchFilters) => {
-    setSearchFilters(filters);
-    
-    let results = mockLawyers;
-    
-    // Apply AI-enhanced filters
-    if (filters.specialty) {
-      results = results.filter(lawyer => 
-        lawyer.specialties.some(s => 
-          s.toLowerCase().includes(filters.specialty!.toLowerCase())
-        )
-      );
-    }
-    
-    if (filters.location) {
-      results = results.filter(lawyer => 
-        lawyer.location.toLowerCase().includes(filters.location!.toLowerCase())
-      );
-    }
-    
-    if (filters.rating) {
-      results = results.filter(lawyer => lawyer.rating >= filters.rating!);
-    }
-    
-    if (filters.priceRange) {
-      results = results.filter(lawyer => 
-        lawyer.hourlyRate >= filters.priceRange![0] && 
-        lawyer.hourlyRate <= filters.priceRange![1]
-      );
-    }
-
-    if (filters.experience) {
-      results = results.filter(lawyer => lawyer.experience >= filters.experience!);
-    }
-
-    if (filters.verified) {
-      results = results.filter(lawyer => lawyer.verified);
-    }
-
-    // Apply sorting
-    if (filters.sortBy) {
-      results.sort((a, b) => {
-        const order = filters.sortOrder === 'desc' ? -1 : 1;
-        switch (filters.sortBy) {
-          case 'rating':
-            return (a.rating - b.rating) * order;
-          case 'price':
-            return (a.hourlyRate - b.hourlyRate) * order;
-          case 'experience':
-            return (a.experience - b.experience) * order;
-          case 'reviews':
-            return (a.reviewCount - b.reviewCount) * order;
-          default:
-            return 0;
-        }
-      });
-    }
-    
-    setFilteredLawyers(results);
-    setShowSearchResults(true);
-    setCurrentView('search');
-  };
-
+      let results = mockLawyers;
+      
+      // Apply AI-enhanced filters
+      if (filters.specialty) {
+        results = results.filter(lawyer => 
+          lawyer.specialties.some(s => 
+            s.toLowerCase().includes(filters.specialty!.toLowerCase())
+          )
+        );
+      }
+      
+      if (filters.location) {
+        results = results.filter(lawyer => 
+          lawyer.location && lawyer.location.toLowerCase().includes(filters.location!.toLowerCase())
+        );
+      }
+      
+      if (filters.rating) {
+        results = results.filter(lawyer => lawyer.rating >= filters.rating!);
+      }
+      
+      if (filters.priceRange) {
+        results = results.filter(lawyer => 
+          lawyer.hourlyRate >= filters.priceRange![0] && 
+          lawyer.hourlyRate <= filters.priceRange![1]
+        );
+      }
+  
+      if (filters.experience) {
+        results = results.filter(lawyer => lawyer.experience >= filters.experience!);
+      }
+  
+      if (filters.verified) {
+        results = results.filter(lawyer => lawyer.verified);
+      }
+  
+      // Apply sorting
+      if (filters.sortBy) {
+        results.sort((a, b) => {
+          const order = filters.sortOrder === 'desc' ? -1 : 1;
+          switch (filters.sortBy) {
+            case 'rating':
+              return (a.rating - b.rating) * order;
+            case 'price':
+              return (a.hourlyRate - b.hourlyRate) * order;
+            case 'experience':
+              return (a.experience - b.experience) * order;
+            case 'reviews':
+              return (a.reviewCount - b.reviewCount) * order;
+            default:
+              return 0;
+          }
+        });
+      }
+      
+      setFilteredLawyers(results);
+      setShowSearchResults(true);
+      setCurrentView('search');
+    };
   const handleViewProfile = (lawyer: Lawyer) => {
     setSelectedLawyer(lawyer);
     setShowProfile(true);
@@ -194,7 +190,7 @@ const AppContent: React.FC = () => {
     setShowChat(true);
   };
 
-  const handleBookingConfirm = (bookingData: any) => {
+  const handleBookingConfirm = (bookingData: { type: string; [key: string]: unknown }) => {
     console.log('Booking confirmed:', bookingData);
     setShowBookingModal(false);
     setSelectedLawyer(null);
@@ -207,9 +203,6 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const handleStartVideoCall = () => {
-    setShowVideoCall(true);
-  };
 
   const handleEndVideoCall = () => {
     setShowVideoCall(false);

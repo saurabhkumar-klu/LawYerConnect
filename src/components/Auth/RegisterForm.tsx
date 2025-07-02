@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { motion } from 'framer-motion';
+import { supabase } from '../../supabaseClient';
 
 interface RegisterFormProps {
   onToggleForm: () => void;
@@ -21,7 +22,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
-  const { register, isLoading } = useAuth();
+  const { isLoading } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -99,12 +100,20 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
       return;
     }
 
-    const success = await register({
-      ...formData,
-      phone: formData.phone ? `+91 ${formData.phone}` : ''
+    const { error: supabaseError } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          name: formData.name,
+          phone: formData.phone,
+          location: formData.location,
+          role: formData.role,
+        }
+      }
     });
-    
-    if (!success) {
+    if (supabaseError) {
+      console.error(supabaseError); // <-- Add this line
       setError('Registration failed. Please try again.');
     }
   };
@@ -121,6 +130,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
 
   const passwordStrength = getPasswordStrength(formData.password);
 
+  // Supabase Google login
+  const handleGoogleLogin = async () => {
+    setError('');
+    const { error: supabaseError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    });
+    if (supabaseError) {
+      setError('Google login failed. Please try again.');
+    }
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -130,6 +150,26 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onToggleForm }) => {
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
         <p className="text-gray-600 mt-2">Join LawyerConnect today</p>
+      </div>
+
+      {/* Google Login Button */}
+      <div className="flex flex-col items-center space-y-2">
+        <button
+          type="button"
+          className="w-full flex items-center justify-center border border-gray-300 rounded-xl px-4 py-3 bg-white hover:bg-gray-50 transition-colors font-semibold text-gray-700 shadow-sm"
+          onClick={handleGoogleLogin}
+        >
+          <svg className="h-5 w-5 mr-2" viewBox="0 0 48 48">
+            <g>
+              <path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.7 32.9 30.1 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 19.5-7.6 21-17.5 0-1.4-.1-2.7-.3-4z"/>
+              <path fill="#34A853" d="M6.3 14.7l7 5.1C15.5 16.1 19.4 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.5 5.1 29.6 3 24 3c-7.2 0-13.4 3.1-17.7 8z"/>
+              <path fill="#FBBC05" d="M24 45c5.6 0 10.5-1.9 14.3-5.1l-6.6-5.4C29.8 36.7 27 37.5 24 37.5c-6.1 0-10.7-4.1-12.5-9.6l-7 5.4C7.6 41.1 15.2 45 24 45z"/>
+              <path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-1.1 3.1-4.2 5.5-7.7 5.5-4.7 0-8.5-3.8-8.5-8.5s3.8-8.5 8.5-8.5c2.1 0 4 .7 5.5 2.1l6.4-6.4C37.9 7.1 31.4 4 24 4c-9.6 0-17.6 7.8-17.6 17.5S14.4 39 24 39c7.4 0 13.9-3.1 18.1-8.1l-7-5.1C32.7 32.9 30.1 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.5 5.1 29.6 3 24 3z"/>
+            </g>
+          </svg>
+          Continue with Google
+        </button>
+        <span className="text-gray-400 text-sm">or</span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Scale, Menu, X, Bell, MessageCircle, User, LogOut, Home, Search, Settings } from 'lucide-react';
+import { Scale, Menu, X, Bell, MessageCircle, User, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import AuthModal from '../Auth/AuthModal';
 
@@ -14,7 +14,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ 
-  onMenuClick, 
   onFindLawyers,
   onShowHowItWorks,
   onShowResources,
@@ -28,10 +27,11 @@ const Header: React.FC<HeaderProps> = ({
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setShowUserMenu(false);
-    if (onGoHome) onGoHome();
+    // Redirect to home page after logout
+    window.location.href = '/'; // or use your router's navigation if using React Router
   };
 
   const handleSignIn = () => {
@@ -107,7 +107,7 @@ const Header: React.FC<HeaderProps> = ({
 
   // Close user menu when clicking outside
   React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = () => {
       if (showUserMenu) {
         setShowUserMenu(false);
       }

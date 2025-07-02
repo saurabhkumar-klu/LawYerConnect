@@ -165,7 +165,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ analytics, user
             Popular Specialties
           </h3>
           <div className="space-y-3">
-            {analytics.popularSpecialties.map((specialty, index) => (
+            {analytics.popularSpecialties.map((specialty) => (
               <div key={specialty.specialty} className="flex items-center justify-between">
                 <span className="text-gray-700 dark:text-gray-300">{specialty.specialty}</span>
                 <div className="flex items-center space-x-2">
