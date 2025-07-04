@@ -76,9 +76,12 @@ export const useAuthState = () => {
     return !error;
   };
 
-  const logout = async () => {
+  const logout = async (): Promise<void> => {
+    setIsLoading(true);
     await supabase.auth.signOut();
     setUser(null);
+    setIsLoading(false);
+    return;
   };
 
   type NewType = {
@@ -103,6 +106,16 @@ export const useAuthState = () => {
     });
     setIsLoading(false);
     return !error;
+  };
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    const { error: supabaseError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+    });
+    if (supabaseError) {
+      setError('Google login failed. Please try again.');
+    }
   };
 
   return {

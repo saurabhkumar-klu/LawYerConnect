@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Users, TrendingUp, DollarSign, Shield, AlertTriangle, CheckCircle, Clock, Star, BarChart3, Settings, UserCheck, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Button from '../Common/Button';
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'lawyers' | 'analytics' | 'reports' | 'settings'>('overview');
@@ -86,14 +87,14 @@ const AdminDashboard: React.FC = () => {
             <p className="text-gray-600">Platform management and analytics</p>
           </div>
           <div className="mt-4 md:mt-0 flex space-x-3">
-            <button className="bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 transition-colors font-medium flex items-center space-x-2">
+            <Button variant="danger">
               <AlertTriangle className="h-5 w-5" />
               <span>Alerts (3)</span>
-            </button>
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2">
+            </Button>
+            <Button variant="primary">
               <Settings className="h-5 w-5" />
               <span>Settings</span>
-            </button>
+            </Button>
           </div>
         </div>
       </motion.div>
@@ -143,7 +144,7 @@ const AdminDashboard: React.FC = () => {
               { id: 'reports', label: 'Reports', icon: FileText },
               { id: 'settings', label: 'Settings', icon: Settings }
             ].map((tab) => (
-              <button
+              <Button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
@@ -154,7 +155,7 @@ const AdminDashboard: React.FC = () => {
               >
                 <tab.icon className="h-4 w-4" />
                 <span>{tab.label}</span>
-              </button>
+              </Button>
             ))}
           </nav>
         </div>
@@ -216,9 +217,9 @@ const AdminDashboard: React.FC = () => {
                         }`}>
                           {item.priority}
                         </span>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                        <Button variant="primary">
                           Review
-                        </button>
+                        </Button>
                       </div>
                     </motion.div>
                   ))}
@@ -238,9 +239,9 @@ const AdminDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Manage all platform users, view user analytics, and handle user-related issues.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Manage Users
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -255,9 +256,9 @@ const AdminDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Verify lawyers, manage profiles, and oversee lawyer performance and compliance.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Manage Lawyers
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -272,9 +273,9 @@ const AdminDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 View detailed analytics, performance metrics, and business intelligence reports.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 View Analytics
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -289,9 +290,9 @@ const AdminDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Generate reports, manage compliance, and export data for regulatory purposes.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Generate Reports
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -306,9 +307,9 @@ const AdminDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Configure platform settings, manage integrations, and update system preferences.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Manage Settings
-              </button>
+              </Button>
             </motion.div>
           )}
         </div>

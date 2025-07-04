@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, MessageCircle, FileText, Star, Clock, CheckCircle, AlertCircle, Search, Filter, Plus, TrendingUp, Users, DollarSign, Award, BarChart3 } from 'lucide-react';
 import { mockConsultations, mockLawyers } from '../../data/mockData';
 import { motion } from 'framer-motion';
+import Button from '../Common/Button';
 
 const LawyerDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'consultations' | 'clients' | 'earnings' | 'reviews'>('overview');
@@ -75,14 +76,14 @@ const LawyerDashboard: React.FC = () => {
             <p className="text-gray-600">Manage your practice and client relationships</p>
           </div>
           <div className="mt-4 md:mt-0 flex space-x-3">
-            <button className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition-colors font-medium flex items-center space-x-2">
+            <Button variant="primary">
               <Plus className="h-5 w-5" />
               <span>Add Availability</span>
-            </button>
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2">
+            </Button>
+            <Button variant="primary">
               <MessageCircle className="h-5 w-5" />
               <span>Messages</span>
-            </button>
+            </Button>
           </div>
         </div>
       </motion.div>
@@ -131,7 +132,7 @@ const LawyerDashboard: React.FC = () => {
               { id: 'earnings', label: 'Earnings', icon: DollarSign },
               { id: 'reviews', label: 'Reviews', icon: Star }
             ].map((tab) => (
-              <button
+              <Button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
@@ -142,7 +143,7 @@ const LawyerDashboard: React.FC = () => {
               >
                 <tab.icon className="h-4 w-4" />
                 <span>{tab.label}</span>
-              </button>
+              </Button>
             ))}
           </nav>
         </div>
@@ -181,9 +182,9 @@ const LawyerDashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <div className="text-sm text-gray-600">{appointment.duration}</div>
-                        <button className="text-blue-600 hover:text-blue-500 text-sm font-medium">
+                        <Button variant="primary">
                           Join Call
-                        </button>
+                        </Button>
                       </div>
                     </motion.div>
                   ))}
@@ -242,9 +243,9 @@ const LawyerDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Manage your upcoming and past consultations, set availability, and track your schedule.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Manage Schedule
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -259,9 +260,9 @@ const LawyerDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 View and manage your client relationships, case histories, and communication records.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 View All Clients
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -276,9 +277,9 @@ const LawyerDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Track your earnings, view payment history, and analyze your practice performance.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 View Earnings Report
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -293,9 +294,9 @@ const LawyerDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 View client reviews, manage your reputation, and respond to feedback.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Manage Reviews
-              </button>
+              </Button>
             </motion.div>
           )}
         </div>

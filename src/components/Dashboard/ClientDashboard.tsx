@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, MessageCircle, FileText, Star, Clock, CheckCircle, AlertCircle, Search, Filter, Plus, TrendingUp } from 'lucide-react';
 import { mockConsultations, mockLawyers } from '../../data/mockData';
 import { motion } from 'framer-motion';
+import Button from '../Common/Button';
 
 const ClientDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'consultations' | 'messages' | 'documents' | 'reviews'>('consultations');
@@ -65,10 +66,10 @@ const ClientDashboard: React.FC = () => {
             <p className="text-gray-600">Manage your legal consultations and documents</p>
           </div>
           <div className="mt-4 md:mt-0 flex space-x-3">
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium flex items-center space-x-2">
+            <Button variant="primary">
               <Plus className="h-5 w-5" />
               <span>Book Consultation</span>
-            </button>
+            </Button>
           </div>
         </div>
       </motion.div>
@@ -146,10 +147,10 @@ const ClientDashboard: React.FC = () => {
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
-                <button className="flex items-center space-x-2 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                <Button variant="secondary">
                   <Filter className="h-5 w-5" />
                   <span>Filter</span>
-                </button>
+                </Button>
               </div>
 
               {/* Upcoming Consultations */}
@@ -200,9 +201,9 @@ const ClientDashboard: React.FC = () => {
                               }`}>
                                 {consultation.type}
                               </span>
-                              <button className="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+                              <Button variant="primary">
                                 Join Now
-                              </button>
+                              </Button>
                             </div>
                           </div>
                         </motion.div>
@@ -218,9 +219,9 @@ const ClientDashboard: React.FC = () => {
                     <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                     <h4 className="text-lg font-medium text-gray-900 mb-2">No upcoming consultations</h4>
                     <p className="text-gray-500 mb-6">Book your first consultation to get started</p>
-                    <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+                    <Button variant="primary">
                       Find Lawyers
-                    </button>
+                    </Button>
                   </motion.div>
                 )}
               </div>
@@ -266,12 +267,12 @@ const ClientDashboard: React.FC = () => {
                               </div>
                             </div>
                             <div className="flex items-center space-x-3">
-                              <button className="text-blue-600 hover:text-blue-500 font-medium px-4 py-2 border border-blue-600 rounded-xl hover:bg-blue-50 transition-colors">
+                              <Button variant="secondary">
                                 Leave Review
-                              </button>
-                              <button className="text-gray-600 hover:text-gray-500 font-medium px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors">
+                              </Button>
+                              <Button variant="secondary">
                                 Download Receipt
-                              </button>
+                              </Button>
                             </div>
                           </div>
                         </motion.div>
@@ -304,9 +305,9 @@ const ClientDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Your conversations with lawyers will appear here. Start a consultation to begin messaging.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Find Lawyers
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -321,9 +322,9 @@ const ClientDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Your legal documents and case files will appear here. Upload and manage all your important documents securely.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Upload Document
-              </button>
+              </Button>
             </motion.div>
           )}
 
@@ -338,9 +339,9 @@ const ClientDashboard: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 Your reviews and ratings will appear here. Help other clients by sharing your experience with lawyers.
               </p>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium">
+              <Button variant="primary">
                 Write Review
-              </button>
+              </Button>
             </motion.div>
           )}
         </div>

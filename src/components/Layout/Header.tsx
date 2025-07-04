@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Scale, Menu, X, Bell, MessageCircle, User, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import AuthModal from '../Auth/AuthModal';
+import toast from 'react-hot-toast';
+import ProfileSettingsModal from '../Common/ProfileSettingsModal';
+import PreferencesModal from '../Common/PreferencesModal';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -26,12 +29,18 @@ const Header: React.FC<HeaderProps> = ({
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showChatDropdown, setShowChatDropdown] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
+  const [showPreferences, setShowPreferences] = useState(false);
 
   const handleLogout = async () => {
+    console.log('Sign Out button clicked');
     await logout();
     setShowUserMenu(false);
-    // Redirect to home page after logout
-    window.location.href = '/'; // or use your router's navigation if using React Router
+    console.log('User after logout:', user);
+    toast.success('You have been signed out.');
+    setTimeout(() => window.location.reload(), 1000);
   };
 
   const handleSignIn = () => {
@@ -81,10 +90,13 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handleSupport = () => {
-    if (onShowSupport) {
+    // Scroll to the Support section at the bottom
+    const supportSection = document.getElementById('support-section');
+    if (supportSection) {
+      supportSection.scrollIntoView({ behavior: 'smooth' });
+    } else if (onShowSupport) {
       onShowSupport();
     } else {
-      // Show support modal or navigate to support page
       alert('Support: For help, please email support@lawyerconnect.in or call +91 98765 43210');
     }
     setShowMobileMenu(false);
@@ -134,8 +146,8 @@ const Header: React.FC<HeaderProps> = ({
                   <Scale className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">LawyerConnect</h1>
-                  <p className="text-xs text-gray-500 hidden sm:block">Professional Legal Services</p>
+                  <h1 className="text-2xl font-extrabold font-sans tracking-tight text-gray-900">LawyerConnect</h1>
+                  <p className="text-xs font-medium font-sans text-gray-500 hidden sm:block">Professional Legal Services</p>
                 </div>
               </button>
             </div>
@@ -144,31 +156,31 @@ const Header: React.FC<HeaderProps> = ({
             <nav className="hidden md:flex items-center space-x-6">
               <button 
                 onClick={handleGoHome}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                className="text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
               >
                 Home
               </button>
               <button 
                 onClick={handleFindLawyers}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                className="text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
               >
                 Find Lawyers
               </button>
               <button 
                 onClick={handleHowItWorks}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                className="text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
               >
                 How It Works
               </button>
               <button 
                 onClick={handleResources}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                className="text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
               >
                 Resources
               </button>
               <button 
                 onClick={handleSupport}
-                className="text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                className="text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
               >
                 Support
               </button>
@@ -178,22 +190,77 @@ const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center space-x-4">
               {user ? (
                 <>
-                  {/* Notifications - Only for logged in users */}
-                  <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                      3
-                    </span>
-                  </button>
-
-                  {/* Messages - Only for logged in users */}
-                  <button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <MessageCircle className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
-                      2
-                    </span>
-                  </button>
-
+                  {/* Notifications & Chat - Only for client and lawyer */}
+                  {(user.role === 'client' || user.role === 'lawyer') && (
+                    <>
+                      {/* Enhanced Notifications Dropdown */}
+                      <div className="relative">
+                        <button
+                          className="relative p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                          onClick={() => {
+                            setShowNotifications((prev) => !prev);
+                            setShowChatDropdown(false);
+                          }}
+                          aria-label="Notifications"
+                        >
+                          <Bell className="h-5 w-5" />
+                          <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                            0
+                          </span>
+                        </button>
+                        {showNotifications && (
+                          <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 p-0 animate-fade-in">
+                            <div className="px-4 py-3 border-b border-gray-100 flex items-center space-x-2">
+                              <Bell className="h-5 w-5 text-blue-600" />
+                              <span className="font-semibold text-gray-800">Notifications</span>
+                            </div>
+                            <div className="p-6 flex flex-col items-center justify-center" aria-live="polite">
+                              <svg className="h-10 w-10 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                              </svg>
+                              <span className="text-gray-500 text-sm">No notifications yet.</span>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-2 text-right">
+                              <a href="#" className="text-blue-600 text-xs font-medium hover:underline">View all</a>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {/* Enhanced Chat Dropdown */}
+                      <div className="relative">
+                        <button
+                          className="relative p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                          onClick={() => {
+                            setShowChatDropdown((prev) => !prev);
+                            setShowNotifications(false);
+                          }}
+                          aria-label="Messages"
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                          <span className="absolute -top-1 -right-1 h-4 w-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
+                            0
+                          </span>
+                        </button>
+                        {showChatDropdown && (
+                          <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 p-0 animate-fade-in">
+                            <div className="px-4 py-3 border-b border-gray-100 flex items-center space-x-2">
+                              <MessageCircle className="h-5 w-5 text-blue-600" />
+                              <span className="font-semibold text-gray-800">Chats</span>
+                            </div>
+                            <div className="p-6 flex flex-col items-center justify-center" aria-live="polite">
+                              <svg className="h-10 w-10 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.8L3 21l1.8-4A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                              <span className="text-gray-500 text-sm">No chats yet.</span>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-2 text-right">
+                              <a href="#" className="text-blue-600 text-xs font-medium hover:underline">View all</a>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                   {/* User Menu */}
                   <div className="relative">
                     <button
@@ -221,7 +288,7 @@ const Header: React.FC<HeaderProps> = ({
                         {/* Dashboard Link - Show for all user types */}
                         {onGoToDashboard && (
                           <button 
-                            onClick={handleGoToDashboard}
+                            onClick={() => { console.log('Go to Dashboard'); handleGoToDashboard(); }}
                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
                           >
                             <User className="h-4 w-4" />
@@ -229,12 +296,12 @@ const Header: React.FC<HeaderProps> = ({
                           </button>
                         )}
                         
-                        <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2">
+                        <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2" onClick={() => { console.log('Open Profile Settings'); setShowProfileSettings(true); }}>
                           <User className="h-4 w-4" />
                           <span>Profile Settings</span>
                         </button>
                         
-                        <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2">
+                        <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2" onClick={() => { console.log('Open Preferences'); setShowPreferences(true); }}>
                           <Settings className="h-4 w-4" />
                           <span>Preferences</span>
                         </button>
@@ -257,7 +324,7 @@ const Header: React.FC<HeaderProps> = ({
                 <div className="flex items-center space-x-3">
                   <button 
                     onClick={handleSignIn}
-                    className="text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                    className="text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                   >
                     Sign In
                   </button>
@@ -286,31 +353,31 @@ const Header: React.FC<HeaderProps> = ({
               <nav className="flex flex-col space-y-4">
                 <button 
                   onClick={handleGoHome}
-                  className="text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                  className="text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                 >
                   Home
                 </button>
                 <button 
                   onClick={handleFindLawyers}
-                  className="text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                  className="text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                 >
                   Find Lawyers
                 </button>
                 <button 
                   onClick={handleHowItWorks}
-                  className="text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                  className="text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                 >
                   How It Works
                 </button>
                 <button 
                   onClick={handleResources}
-                  className="text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                  className="text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                 >
                   Resources
                 </button>
                 <button 
                   onClick={handleSupport}
-                  className="text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                  className="text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                 >
                   Support
                 </button>
@@ -319,7 +386,7 @@ const Header: React.FC<HeaderProps> = ({
                 {user && onGoToDashboard && (
                   <button 
                     onClick={handleGoToDashboard}
-                    className="text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                    className="text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                   >
                     Dashboard
                   </button>
@@ -330,7 +397,7 @@ const Header: React.FC<HeaderProps> = ({
                   <div className="pt-4 border-t border-gray-200 space-y-3">
                     <button 
                       onClick={handleSignIn}
-                      className="w-full text-left text-gray-600 hover:text-blue-600 font-medium transition-colors text-sm"
+                      className="w-full text-left text-gray-600 hover:text-blue-600 font-sans font-medium transition-colors text-sm"
                     >
                       Sign In
                     </button>
@@ -356,6 +423,10 @@ const Header: React.FC<HeaderProps> = ({
           initialMode={authMode}
         />
       )}
+
+      {/* Render the modals */}
+      <ProfileSettingsModal isOpen={showProfileSettings} onClose={() => setShowProfileSettings(false)} />
+      <PreferencesModal isOpen={showPreferences} onClose={() => setShowPreferences(false)} />
     </>
   );
 };

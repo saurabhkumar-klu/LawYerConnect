@@ -23,6 +23,8 @@ import VideoCall from './components/Video/VideoCall';
 import { SearchFilters, Lawyer, User } from './types';
 import { mockLawyers } from './data/mockData';
 import { motion, AnimatePresence } from 'framer-motion';
+import AuthModal from './components/Auth/AuthModal';
+import SupportSection from './components/Common/SupportSection';
 
 const AppContent: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -37,6 +39,8 @@ const AppContent: React.FC = () => {
   const [showVideoCall, setShowVideoCall] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'dashboard' | 'search'>('home');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   useEffect(() => {
     // Initialize app
@@ -181,6 +185,12 @@ const AppContent: React.FC = () => {
   };
 
   const handleBookConsultation = (lawyer: Lawyer) => {
+    if (!user) {
+      setSelectedLawyer(lawyer);
+      setAuthMode('login');
+      setShowAuthModal(true);
+      return;
+    }
     setSelectedLawyer(lawyer);
     setShowBookingModal(true);
   };
@@ -207,6 +217,14 @@ const AppContent: React.FC = () => {
   const handleEndVideoCall = () => {
     setShowVideoCall(false);
   };
+
+  // After login, if a lawyer was selected, show booking modal
+  useEffect(() => {
+    if (user && showAuthModal && selectedLawyer) {
+      setShowAuthModal(false);
+      setShowBookingModal(true);
+    }
+  }, [user, showAuthModal, selectedLawyer]);
 
   if (isLoading || !isInitialized) {
     return <LoadingSpinner fullScreen text="Initializing LawyerConnect..." />;
@@ -347,6 +365,9 @@ const AppContent: React.FC = () => {
         {renderContent()}
       </AnimatePresence>
 
+      {/* Support section above the footer */}
+      <SupportSection />
+
       <Footer />
 
       {/* Modals */}
@@ -374,6 +395,13 @@ const AppContent: React.FC = () => {
           />
         )}
       </AnimatePresence>
+
+      {/* Auth Modal for login/signup */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+      />
 
       {/* Chat Interface */}
       {showChat && chatRecipient && user && (
